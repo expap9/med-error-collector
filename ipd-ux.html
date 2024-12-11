@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Language" content="th">
+  <title>MED ERROR ห้องยาผู้ป่วยใน</title>
+  <style>
+    body {
+      background-color: #ffffcc;
+    }
+    #input-container {
+      border: 1px solid black;
+      background-color: #ccffff;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #input-field {
+      border: none;
+      background-color: #ccffff;
+      font-size: 24px;
+      color: #0000cc;
+      width: 80%;
+      text-align: center;
+    }
+    #input-field:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>เก็บข้อมูล MED ERROR ด้วยเสียง</h1>
+  <div id="input-container">
+    <input type="text" id="input-field" placeholder="พูดคำสั่งเพื่อเก็บข้อมูล">
+    <button id="submit-button">ส่งข้อมูล</button>
+  </div>
+  <script>
+    const recognition = new webkitSpeechRecognition();
+    const inputField = document.getElementById("input-field");
+    const submitButton = document.getElementById("submit-button");
+    
+    recognition.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      inputField.value = transcript;
+    }
+
+    submitButton.addEventListener("click", function() {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://script.google.com/macros/s/AKfycbyh6DpzxuwO-ZN12jYxh1YVRLlz22MDS7MbXWc1RrpG75tHGP6hHu82kKZpoSZilIsFZA/exec?transcript=" + encodeURIComponent(inputField.value), true);
+      xhr.send();
+      alert("ข้อมูลถูกส่งไปยัง Google Sheets แล้ว");
+      inputField.value = "";
+    });
+
+    inputField.addEventListener("click", function() {
+      recognition.start();
+    });
+  </script>
+</body>
+</html>
